@@ -4,6 +4,5 @@
 [nodes]
 10.0.20.20
 
-
 [nodes:vars]
 ansible_ssh_common_args= '-o ProxyCommand="ssh -W %h:%p -o ServerAliveInterval=60 -o ServerAliveCountMax=30 -o StrictHostKeyChecking=no -tt ec2-user@34.218.223.153"'

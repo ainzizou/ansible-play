@@ -1,0 +1,49 @@
+name: Run DCAPT
+
+on:
+  push:
+
+env:
+  IMAGE_ID: ami-00ee4df451840fa9d
+  AWS_ACCESS_KEY_ID: AKIAXVXYVGKERGX6SVLI
+  AWS_SECRET_KEY: ${{ secrets.AWS_LABS_ACCOUNT_CREDENTIALS }}
+
+jobs:
+    run-automation:
+      runs-on: ubuntu-latest
+      steps:
+        - name: Checkout
+          uses: actions/checkout@v3
+        - name: executing remote ssh commands using ssh key
+          uses: appleboy/ssh-action@master
+          with:
+            host: 34.218.223.153
+            username: ec2-user
+            key: ${{ secrets.SSH_DCAPT_KEY }}
+            port: 22
+            script: touch hello.txt
+        - name: Run playbook
+          uses: dawidd6/action-ansible-playbook@v2
+          with:
+            # Required, playbook filepath
+            playbook: provision.yml
+            # Optional, directory where playbooks live
+#            directory: ./
+            # Optional, SSH private key
+            key: ${{ secrets.SSH_DCAPT_KEY }}
+#            known_hosts:
+            # Optional, literal inventory file contents
+            inventory: |
+              [bastion]
+              34.218.223.153
+
+              [nodes]
+              10.0.20.20
+              
+              [nodes:vars]
+              ansible_ssh_common_args= '-o ProxyCommand="ssh -W %h:%p -o ServerAliveInterval=60 -o ServerAliveCountMax=30 -o StrictHostKeyChecking=no -tt ec2-user@34.218.223.153"'
+
+            # Optional, additional flags to pass to ansible-playbook
+            options: |
+              -u ec2-user
+              --extra-vars hello=greetings
