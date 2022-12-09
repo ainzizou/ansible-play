@@ -1,8 +1,8 @@
 [bastion]
-34.218.223.153
+34.221.178.87
 
 [nodes]
-10.0.20.20
+10.0.0.122
 
 [nodes:vars]
-ansible_ssh_common_args= '-o ProxyCommand="ssh -W %h:%p -o ServerAliveInterval=60 -o ServerAliveCountMax=30 -o StrictHostKeyChecking=no -tt ec2-user@34.218.223.153"'
+ansible_ssh_common_args= '-o ProxyCommand="ssh -p 22 -W %h:%p -o ServerAliveInterval=60 -o ServerAliveCountMax=30 -o StrictHostKeyChecking=no -tt ec2-user@34.221.178.87"'

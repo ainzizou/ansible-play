@@ -1,0 +1,36 @@
+name: Run Automation
+
+on:
+  push:
+
+jobs:
+  run-automation:
+    runs-on: self-hosted
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Install SSH key of target
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.SSH_DCAPT_KEY }}
+          name: id_rsa-target
+          known_hosts: unnecessary
+          if_key_exists: replace
+          config: |                                         # will be appended to existing .ssh/config
+            Host *
+              StrictHostKeyChecking no
+              ServerAliveInterval 300
+              ServerAliveCountMax 30
+            Host bastion
+              HostName 34.221.178.87
+              User ec2-user
+              IdentityFile ~/.ssh/id_rsa-target
+            Host private1
+              HostName 10.0.0.122
+              User ec2-user
+              IdentityFile ~/.ssh/id_rsa-target
+              ProxyCommand ssh -q -W %h:%p bastion
+      - name: Execute the command
+        run:
+          ssh private1 "touch ain.txt"
+      - run: ansible-playbook provision.yml -u ubuntu --verbose --extra-vars hello=passwordhere
