@@ -1,0 +1,56 @@
+name: Continuous Integration
+on:
+  workflow_dispatch:
+  push:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    environment: staging
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Run Hackweek
+        run: echo "Hackweek"
+
+      - name: Run hello world
+        run: echo "hello world"
+
+  running-test:
+    runs-on: ubuntu-latest
+    needs: build
+    environment: staging
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Run test 1
+        run: echo "Hackweek"
+
+      - name: Run  test 2
+        run: echo "hello world"
+
+  prepare-env:
+    runs-on: ubuntu-latest
+    needs: build
+    environment: staging
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Run test 1
+        run: echo "Hackweek"
+
+      - name: Run  test 2
+        run: echo "hello world"
+
+  announcement:
+    runs-on: ubuntu-latest
+    needs: [build, prepare-env]
+    environment: staging
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Run test 1
+        run: echo "Hackweek"
+
+      - name: Run  test 2
+        run: echo "hello world"
