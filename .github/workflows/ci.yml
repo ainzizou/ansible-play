@@ -49,7 +49,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Run test 1
+      - name: Run test 1.
         run: echo "Hackweek"
 
       - name: Run  test 2
